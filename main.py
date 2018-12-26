@@ -8,10 +8,11 @@ some LEDBoard_4x4_16bit and a IR Receiver for a photobooth project..
 
 import time
 
-# import board
+import board
 
 import adafruit_fancyled.adafruit_fancyled as fancyled
 import animation
+import ir_helper
 
 
 ##########################################
@@ -29,6 +30,18 @@ print(
 
 ##########################################
 # function
+
+def key_handler(self, key_value, key_name):
+    """Print basic information about received key."""
+    print(
+        "{value:>2} "
+        "{key_name} "
+        "".format(
+            value=key_value,
+            key_name=key_name,
+        )
+    )
+
 
 # Positional offset into color palette to get it to 'spin'
 offset = 0
@@ -54,6 +67,7 @@ def main_animation():
 if __name__ == '__main__':
     print(42 * '*')
     time.sleep(5)
+
     # print("\n")
     # animation.pixel_map_print_information()
     print("\n")
@@ -61,7 +75,10 @@ if __name__ == '__main__':
     print("\n")
     # animation.pixel_map_print_information()
     # print("\n")
+
+    myIRHelper = ir_helper.IRHelper(board.D7, key_handler)
     print(42 * '*')
     print("rainbow loop")
     while True:
         main_animation()
+        myIRHelper.check()

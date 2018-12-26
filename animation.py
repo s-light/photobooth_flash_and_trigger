@@ -1,119 +1,54 @@
-"""TLC5957 & FancyLED."""
+"""TLC5971 & FancyLED."""
 
 __doc__ = """
-animation.py - TLC5957 & FancyLED & 2D Array / Mapping.
+animation.py - TLC5971 & FancyLED & 2D Array / Mapping.
 
-this is sub file for the magic amulet animation things.
-it combines the TLC5957 library with FancyLED and 2D Array / Mapping.
+it combines the TLC5971 library with FancyLED and 2D Array / Mapping.
 
 Enjoy the colors :-)
 """
 
 import board
-# import busio
-import bitbangio
-import pulseio
-import digitalio
+import busio
 
-import slight_tlc5957
+import adafruit_tlc59711
 import adafruit_fancyled.adafruit_fancyled as fancyled
 
 
 ##########################################
 if __name__ == '__main__':
-    print(
-        "\n" +
-        (42 * '*') + "\n" +
-        __doc__ + "\n" +
-        (42 * '*') + "\n" +
-        "\n"
-    )
+    print()
+    print(42 * '*')
+    print(__doc__)
+    print(42 * '*')
+    print()
 
 ##########################################
 print(42 * '*')
-print("initialise digitalio pins for SPI")
-spi_clock = digitalio.DigitalInOut(board.SCK)
-spi_clock.direction = digitalio.Direction.OUTPUT
-spi_mosi = digitalio.DigitalInOut(board.MOSI)
-spi_mosi.direction = digitalio.Direction.OUTPUT
-spi_miso = digitalio.DigitalInOut(board.MISO)
-spi_miso.direction = digitalio.Direction.INPUT
+print("define pixel array / init TLC5971")
 
-# print((42 * '*') + "\n" + "init busio.SPI")
-# spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
-print("init bitbangio.SPI")
-spi = bitbangio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
-
-# on the ItsyBitsy M4 EXPRESS on pin D9 the maximum frequency is about 6MHz?!
-# gsclk_freqency = (6 * 1000 * 1000)  # 6MHz
-gsclk_freqency = (20 * 1000 * 1000)  # 10MHz
-gsclk = pulseio.PWMOut(
-    board.D9, duty_cycle=(2 ** 15), frequency=gsclk_freqency)
-print("gsclk.frequency: {:}MHz".format(gsclk.frequency / (1000*1000)))
-
-latch = digitalio.DigitalInOut(board.D7)
-latch.direction = digitalio.Direction.OUTPUT
-
-##########################################
-print(42 * '*')
-print("define pixel array / init TLC5957")
-LEDBoard_count = 3
+LEDBoard_count = 8
 LEDBoard_row_count = 4
 LEDBoard_col_count = 4
 pixel_col_count = LEDBoard_count * LEDBoard_col_count
 pixel_count = pixel_col_count * LEDBoard_row_count
-pixels = slight_tlc5957.TLC5957(
-    spi=spi,
-    latch=latch,
-    gsclk=gsclk,
-    spi_clock=spi_clock,
-    spi_mosi=spi_mosi,
-    spi_miso=spi_miso,
-    pixel_count=pixel_count)
 
-# How to map a 2D-Pixel Array to the needed TLC5957 sending order:
-#
-# physically the pixels are orderd this way on the board:
-# physical_map = [
-#     [ 0,  1,  2,  3],
-#     [ 4,  5,  6,  7],
-#     [ 8,  9, 10, 11],
-#     [12, 13, 14, 15],
-# ]
-# but we need to reverse this order for the send data.
-# this results in
-# pixel_map = [
-#     [15, 14, 13, 12],
-#     [11, 10,  9,  8],
-#     [ 7,  6,  5,  4],
-#     [ 3,  2,  1,  0],
-# ]
-# if we have more than one chip it gets a little bit complicated.
-# we need to first send all physical last pixels in one row.
-# than the next and so on..
-# so if we have a physical map with 2*16 LEDs:
-# physical_map = [
-#      CHIP_1            CHIP_2
-#     [ 0,  1,  2,  3,    0,  1,  2,  3],
-#     [ 4,  5,  6,  7,    4,  5,  6,  7],
-#     [ 8,  9, 10, 11,    8,  9, 10, 11],
-#     [12, 13, 14, 15,   12, 13, 14, 15],
-# ]
-# this results in this pixel-sending order:
-# pixel_map = [
-#      CHIP_1            CHIP_2
-#     [31, 29, 27, 25,   30, 28, 26, 24],
-#     [23, 21, 19, 17,   22, 20, 18, 16],
-#     [15, 13, 11,  9,   14, 12, 10,  8],
-#     [ 7,  5,  3,  1,    6,  4,  2,  0],
-# ]
+spi = busio.SPI(board.SCK, MOSI=board.MOSI)
+# Define array with TLC5971 chips
+pixels = [
+    adafruit_tlc59711.TLC59711(spi, auto_show=False)
+    for count in range(pixel_count // 4)
+]
+
+
+# How to map a 2D-Pixel Array to the needed TLC5971 sending order:
 
 
 LEDBoard_map = [
-    [15, 14, 13, 12],
-    [11, 10,  9,  8],
-    [7,   6,  5,  4],
-    [3,   2,  1,  0],
+    [4, 5, 12, 13],
+    [6, 7, 14, 15],
+    [0, 1, 8, 11],
+    [2, 3, 10, 12],
 ]
 
 # create empty 2d list
