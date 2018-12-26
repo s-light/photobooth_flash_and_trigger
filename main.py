@@ -12,17 +12,17 @@ import board
 
 import adafruit_fancyled.adafruit_fancyled as fancyled
 # import animation
+import animation_minimal as animation
 import ir_helper
 
 
 ##########################################
-print(
-    "\n" +
-    (42 * '*') + "\n" +
-    __doc__ + "\n" +
-    (42 * '*') + "\n" +
-    "\n"
-)
+if __name__ == '__main__':
+    print()
+    print(42 * '*')
+    print(__doc__)
+    print(42 * '*')
+    print()
 
 ##########################################
 # helper function
@@ -42,11 +42,16 @@ def key_handler(self, key_value, key_name):
             key_name=key_name,
         )
     )
+    if key_value is ir_helper.KeyMap.UP:
+        animation.value_high += 2000
+    elif key_value is ir_helper.KeyMap.DOWN:
+        animation.value_high -= 2000
+    elif key_value is ir_helper.KeyMap.OFF:
+        animation.value_high = 100
 
 
 # Positional offset into color palette to get it to 'spin'
-offset = 0
-
+# offset = 0
 
 # def main_animation():
 #     """Animation example."""
@@ -58,16 +63,16 @@ offset = 0
 #             animation.palette, offset + i / animation.pixel_count)
 #         color = fancyled.gamma_adjust(color, brightness=0.1)
 #         animation.pixels[i] = color
-#         animation.pixels.show()
+#     animation.pixels_show()
 #
-#         offset += 0.01  # Bigger number = faster spin
+#     offset += 0.01  # Bigger number = faster spin
 
 
 ##########################################
 # main
 if __name__ == '__main__':
     print(42 * '*')
-    time.sleep(5)
+    time.sleep(0.5)
 
     # print("\n")
     # animation.pixel_map_print_information()
@@ -81,5 +86,8 @@ if __name__ == '__main__':
     print(42 * '*')
     print("rainbow loop")
     while True:
-        # main_animation()
+        # animation.rainbow_update()
         myIRHelper.check()
+        animation.channelcheck_update()
+        myIRHelper.check()
+        time.sleep(0.1)
