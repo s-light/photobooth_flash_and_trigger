@@ -11,7 +11,7 @@ import time
 import board
 
 import adafruit_fancyled.adafruit_fancyled as fancyled
-import animation
+# import animation
 import ir_helper
 
 
@@ -34,6 +34,7 @@ print(
 def key_handler(self, key_value, key_name):
     """Print basic information about received key."""
     print(
+        "IR-KEY: "
         "{value:>2} "
         "{key_name} "
         "".format(
@@ -47,19 +48,19 @@ def key_handler(self, key_value, key_name):
 offset = 0
 
 
-def main_animation():
-    """Animation example."""
-    global offset
-    for i in range(animation.pixel_count):
-        # Load each pixel's color from the palette using an offset, run it
-        # through the gamma function, pack RGB value and assign to pixel.
-        color = fancyled.palette_lookup(
-            animation.palette, offset + i / animation.pixel_count)
-        color = fancyled.gamma_adjust(color, brightness=0.1)
-        animation.pixels[i] = color
-        animation.pixels.show()
-
-        offset += 0.01  # Bigger number = faster spin
+# def main_animation():
+#     """Animation example."""
+#     global offset
+#     for i in range(animation.pixel_count):
+#         # Load each pixel's color from the palette using an offset, run it
+#         # through the gamma function, pack RGB value and assign to pixel.
+#         color = fancyled.palette_lookup(
+#             animation.palette, offset + i / animation.pixel_count)
+#         color = fancyled.gamma_adjust(color, brightness=0.1)
+#         animation.pixels[i] = color
+#         animation.pixels.show()
+#
+#         offset += 0.01  # Bigger number = faster spin
 
 
 ##########################################
@@ -71,7 +72,7 @@ if __name__ == '__main__':
     # print("\n")
     # animation.pixel_map_print_information()
     print("\n")
-    animation.pixel_map_fill()
+    # animation.pixel_map_fill()
     print("\n")
     # animation.pixel_map_print_information()
     # print("\n")
@@ -80,5 +81,5 @@ if __name__ == '__main__':
     print(42 * '*')
     print("rainbow loop")
     while True:
-        main_animation()
+        # main_animation()
         myIRHelper.check()
