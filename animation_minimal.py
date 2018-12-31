@@ -11,10 +11,13 @@ for the aktuall hardware used..)
 Enjoy the colors :-)
 """
 
+import time
+
 import board
 import busio
 
-import adafruit_tlc59711
+# from adafruit_tlc59711.adafruit_tlc59711 import TLC59711
+from adafruit_tlc59711.adafruit_tlc59711_multi import TLC59711Multi
 import adafruit_fancyled.adafruit_fancyled as fancyled
 
 
@@ -38,28 +41,24 @@ pixel_count = pixel_col_count * LEDBoard_row_count
 
 spi = busio.SPI(board.SCK, MOSI=board.MOSI)
 # Define array with TLC5971 chips
-pixels = [
-    adafruit_tlc59711.TLC59711(spi, auto_show=False)
-    for count in range(pixel_count // 4)
-]
+# pixels = [
+#     TLC59711(spi, auto_show=False)
+#     for count in range(pixel_count // 4)
+# ]
+# pixels = TLC59711Multi(spi, pixel_count=pixel_count)
+pixels = TLC59711Multi(spi, pixel_count=16)
 
 
 ##########################################
 # helper function
 
-def map_01_to_16bit(color):
-    """Map range 0..1 to 16bit 0..65535."""
-    return (
-        int(color.red * 65535),
-        int(color.green * 65535),
-        int(color.blue * 65535)
-    )
-
-
-def pixels_show():
-    """Call show on every pixel."""
-    for i in range(pixel_count // 4):
-        pixels[i].show()
+# def map_01_to_16bit(color):
+#     """Map range 0..1 to 16bit 0..65535."""
+#     return (
+#         int(color.red * 65535),
+#         int(color.green * 65535),
+#         int(color.blue * 65535)
+#     )
 
 
 ##########################################
@@ -96,31 +95,68 @@ def rainbow_update():
         #     div=i // 4,
         #     mod=i % 4
         # ))
-        pixels[i // 4][i % 4] = map_01_to_16bit(color)
-    pixels_show()
-    # pixels[0].show()
+        # pixels[i // 4][i % 4] = map_01_to_16bit(color)
+        pixels[i] = color
+    pixels.show()
 
     offset += 0.001  # Bigger number = faster spin
-
-
-def set_all_black():
-    """Set all Pixel to Black."""
-    for i in range(pixel_count):
-        pixels[i // 4][i % 4] = (0, 0, 0)
 
 
 def channelcheck_update():
     """ChannelCheck."""
     global offset
-    i = offset
     # i_prev = i - 1
     # pixels[i_prev // 4][i_prev % 4] = (0, 0, 0)
-    pixels[i // 4][i % 4] = (value_high, 0, 0)
-    pixels_show()
+    pixels[offset] = (value_high, 0, 0)
+    # pixels[i // 4][i % 4] = (value_high, 0, 0)
+    pixels.show()
     offset += 1
     if offset >= pixel_count:
         offset = 0
         set_all_black()
+
+
+def set_all_black():
+    """Set all Pixel to Black."""
+    set_all((0, 0, 0))
+
+
+def set_all(color):
+    """Set all Pixel to color."""
+    for i in range(pixel_count):
+        pixels[i // 4][i % 4] = color
+
+
+def flash_fade():
+    """Set all Pixel to color."""
+    top = 60000
+    # duration = 5
+    # step_duration = duration / top
+    # fade up
+    for i in range(0, top // 6, 1000):
+        set_all((i, i, i))
+        pixels.show()
+    for i in range(top // 6, top, 5000):
+        set_all((i, i, i))
+        pixels.show()
+        # time.sleep(step_duration)
+    # wait...
+    time.sleep(1)
+    # reset
+    set_all_black()
+    pixels.show()
+
+
+def flash():
+    """Set all Pixel to color."""
+    top = 60000
+    set_all((top, top, top))
+    pixels.show()
+    # wait...
+    time.sleep(1)
+    # reset
+    set_all_black()
+    pixels.show()
 
 
 def test_main():

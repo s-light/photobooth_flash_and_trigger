@@ -43,11 +43,19 @@ def key_handler(self, key_value, key_name):
         )
     )
     if key_value is ir_helper.KeyMap.UP:
-        animation.value_high += 2000
+        animation.value_high += 5000
     elif key_value is ir_helper.KeyMap.DOWN:
-        animation.value_high -= 2000
+        animation.value_high -= 5000
     elif key_value is ir_helper.KeyMap.OFF:
         animation.value_high = 100
+        animation.set_all_black()
+        animation.pixels_show()
+    elif key_value is ir_helper.KeyMap.ON:
+        animation.value_high = 1000
+        animation.flash_fade()
+    elif key_value is ir_helper.KeyMap.FLASH:
+        animation.value_high = 1000
+        animation.flash()
 
 
 # Positional offset into color palette to get it to 'spin'

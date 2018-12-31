@@ -81,6 +81,7 @@ def wait_with_print(duration):
         waiting_duration += step_duration
     print("")
 
+
 def test_main():
     """Test Main."""
 
@@ -105,7 +106,6 @@ def test_main():
     pmap.print_mapping()
     # wait_with_print(1)
 
-
     #####################
     # TLC5957 mapping
     def mymap_tlc5957_single(self, row, col):
@@ -119,8 +119,8 @@ def test_main():
         chip_row = row / LEDBoard_row_count
         chip_col = col / LEDBoard_col_count
 
-        chipin_row_inv = (LEDBoard_row_count-1) - chipin_row
-        chipin_col_inv = (LEDBoard_col_count-1) - chipin_col
+        chipin_row_inv = (LEDBoard_row_count - 1) - chipin_row
+        chipin_col_inv = (LEDBoard_col_count - 1) - chipin_col
         chipin_pixel_index = (
             (chipin_row_inv * LEDBoard_col_count) + chipin_col_inv
         )
@@ -129,10 +129,12 @@ def test_main():
 
         return pixel_index
 
-    pmap = PixelMap2D(row_count=4, col_count=8, map_function=mymap_tlc5957_single)
+    pmap = PixelMap2D(
+        row_count=4,
+        col_count=8,
+        map_function=mymap_tlc5957_single)
     pmap.print_mapping()
     # wait_with_print(1)
-
 
     def mymap_tlc5957(self, row, col):
         """Map row and col to pixel_index."""
@@ -147,7 +149,7 @@ def test_main():
         # physical_index = (row * self.col_count) + col
 
         # row_inv = (self.row_count-1) - row
-        col_inv = (self.col_count-1) - col
+        col_inv = (self.col_count - 1) - col
 
         # split chip position from chip_inner
         chipin_row = row % LEDBoard_row_count
@@ -155,8 +157,8 @@ def test_main():
         # chip_row_inv = row_inv // LEDBoard_row_count
         chip_col_inv = col_inv // LEDBoard_col_count
 
-        chipin_row_inv = (LEDBoard_row_count-1) - chipin_row
-        chipin_col_inv = (LEDBoard_col_count-1) - chipin_col
+        chipin_row_inv = (LEDBoard_row_count - 1) - chipin_row
+        chipin_col_inv = (LEDBoard_col_count - 1) - chipin_col
         chipin_pixel_index = (
             (chipin_row_inv * LEDBoard_col_count) + chipin_col_inv
         )
@@ -168,6 +170,7 @@ def test_main():
     pmap = PixelMap2D(row_count=4, col_count=8, map_function=mymap_tlc5957)
     pmap.print_mapping()
     # wait_with_print(1)
+
 
 if __name__ == '__main__':
     test_main()
