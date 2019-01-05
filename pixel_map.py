@@ -35,7 +35,7 @@ class PixelMap2D(object):
         pixel_index = self.map_function(self, row, col)
         return pixel_index
 
-    @staticmethod
+    # @staticmethod
     def _map_function(self, row, col):
         """Map row and col to pixel_index."""
         pixel_index = (row * self.col_count) + col
@@ -72,6 +72,7 @@ class PixelMap2D(object):
 # main loop
 
 def wait_with_print(duration):
+    """Wait with print."""
     import time
     step_duration = 0.5
     waiting_duration = 0
@@ -84,7 +85,6 @@ def wait_with_print(duration):
 
 def test_main():
     """Test Main."""
-
     #####################
     # default map
     # pmap = PixelMap2D(row_count=4, col_count=4)
@@ -112,12 +112,12 @@ def test_main():
         """Map row and col to pixel_index."""
         LEDBoard_row_count = 4
         LEDBoard_col_count = 4
-        CHIP_LED_COUNT = 16
+        # CHIP_LED_COUNT = 16
         # split chip position from chip_inner
         chipin_row = row % LEDBoard_row_count
         chipin_col = col % LEDBoard_col_count
-        chip_row = row / LEDBoard_row_count
-        chip_col = col / LEDBoard_col_count
+        # chip_row = row / LEDBoard_row_count
+        # chip_col = col / LEDBoard_col_count
 
         chipin_row_inv = (LEDBoard_row_count - 1) - chipin_row
         chipin_col_inv = (LEDBoard_col_count - 1) - chipin_col
@@ -138,7 +138,6 @@ def test_main():
 
     def mymap_tlc5957(self, row, col):
         """Map row and col to pixel_index."""
-
         # this version only works for Boards rows == 4
 
         LEDBoard_row_count = 4

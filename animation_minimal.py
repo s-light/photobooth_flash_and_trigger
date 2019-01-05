@@ -34,6 +34,7 @@ print(42 * '*')
 print("define pixel array / init TLC5971")
 
 LEDBoard_count = 8
+# LEDBoard_count = 1
 LEDBoard_row_count = 4
 LEDBoard_col_count = 4
 pixel_col_count = LEDBoard_count * LEDBoard_col_count
@@ -45,8 +46,7 @@ spi = busio.SPI(board.SCK, MOSI=board.MOSI)
 #     TLC59711(spi, auto_show=False)
 #     for count in range(pixel_count // 4)
 # ]
-# pixels = TLC59711Multi(spi, pixel_count=pixel_count)
-pixels = TLC59711Multi(spi, pixel_count=16)
+pixels = TLC59711Multi(spi, pixel_count=pixel_count)
 
 
 ##########################################
@@ -79,7 +79,7 @@ palette = [
 # Positional offset into color palette to get it to 'spin'
 offset = 0
 
-value_high = 1000
+value_high = 2000
 
 
 def rainbow_update():
@@ -105,6 +105,7 @@ def rainbow_update():
 def channelcheck_update():
     """ChannelCheck."""
     global offset
+    # print("offset", offset)
     # i_prev = i - 1
     # pixels[i_prev // 4][i_prev % 4] = (0, 0, 0)
     pixels[offset] = (value_high, 0, 0)
@@ -124,7 +125,8 @@ def set_all_black():
 def set_all(color):
     """Set all Pixel to color."""
     for i in range(pixel_count):
-        pixels[i // 4][i % 4] = color
+        # pixels[i // 4][i % 4] = color
+        pixels[i] = color
 
 
 def flash_fade():
