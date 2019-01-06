@@ -254,20 +254,54 @@ class AnimationHelper(object):
     def rainbow_update(self):
         """Rainbow."""
         for row_index in range(Matrix_row_count):
-            # Load each pixel's color from the palette using an offset, run it
-            # through the gamma function, pack RGB value and assign to pixel.
-            color = fancyled.palette_lookup(
-                palette,
-                self.offset + row_index / Matrix_row_count)
-            color = fancyled.gamma_adjust(color, brightness=0.1)
+            # Load each pixel's color from the palette using an offset
+            # color = fancyled.palette_lookup(
+            #     palette,
+            #     self.offset + row_index / Matrix_row_count
+            #
+            # )
+
+            # results in 84,47ms
+            # but has not as nice colors...
+            # color_r, color_g, color_b = fancyled.CRGB(fancyled.CHSV(
+            #     self.offset +
+            #     # (row_index / Matrix_row_count),
+            #     map_range(
+            #         row_index,
+            #         0, Matrix_row_count,
+            #         0, 1.0
+            #     ),
+            #     v=0.1
+            # ))
+
+            # results in 99.41ms
+            color = fancyled.CHSV(
+                self.offset +
+                # (row_index / Matrix_row_count),
+                map_range(
+                    row_index,
+                    0, Matrix_row_count,
+                    0, 1.0
+                ),
+                # v=0.05
+            )
+            color_r, color_g, color_b = fancyled.gamma_adjust(
+                color,
+                brightness=0.2)
+
             for col_index in range(Matrix_col_count):
                 # pixels[pmap.map(col=col_index, row=row_index)] = color
                 pixels.set_pixel_float_value(
-                    pmap.map(col=col_index, row=row_index),
-                    color[0],
-                    color[1],
-                    color[2],
+                    # pmap.map(col=col_index, row=row_index),
+                    pmap.map_raw[row_index][col_index],
+                    color_r, color_g, color_b
                 )
+                # pixels.set_pixel_float_value(
+                #     pmap.map_raw[row_index][col_index],
+                #     0.1,
+                #     0.5,
+                #     0.5,
+                # )
         pixels.show()
 
         self.offset += 0.01  # Bigger number = faster spin

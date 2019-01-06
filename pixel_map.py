@@ -28,21 +28,28 @@ class PixelMap2D(object):
             self.map_function = map_function
         self.pixel_buffer = pixel_buffer
         # prepare static map
-        self._map = [[0 for i in range(col_count)] for j in range(row_count)]
+        self.map_raw = [
+            [0 for i in range(col_count)] for j in range(row_count)
+        ]
         self.init_map()
 
     def init_map(self):
         """Prepare Static Map."""
-        self._map[][]
-        pixel_index = self.map_function(self, col=col, row=row)
-
+        for row_index in range(self.row_count):
+            for col_index in range(self.col_count):
+                self.map_raw[row_index][col_index] = self.map_function(
+                    self,
+                    col=col_index,
+                    row=row_index
+                )
 
     def map(self, *, col=0, row=0):
         """Map row and col to pixel_index."""
         # print("map called.")
         # print("map_function: ", self.map_function)
-        pixel_index = self.map_function(self, col=col, row=row)
-        return pixel_index
+        # pixel_index = self.map_function(self, col=col, row=row)
+        # return pixel_index
+        return self.map_raw[row][col]
 
     # @staticmethod
     def _map_function(self, *, col=0, row=0):
