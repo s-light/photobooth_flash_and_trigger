@@ -28,15 +28,15 @@ class PixelMap2D(object):
             self.map_function = map_function
         self.pixel_buffer = pixel_buffer
 
-    def map(self, row, col):
+    def map(self, *, col=0, row=0):
         """Map row and col to pixel_index."""
         # print("map called.")
         # print("map_function: ", self.map_function)
-        pixel_index = self.map_function(self, row, col)
+        pixel_index = self.map_function(self, col=col, row=row)
         return pixel_index
 
     # @staticmethod
-    def _map_function(self, row, col):
+    def _map_function(self, *, col=0, row=0):
         """Map row and col to pixel_index."""
         pixel_index = (row * self.col_count) + col
         return pixel_index
@@ -62,7 +62,7 @@ class PixelMap2D(object):
             row_string = ""
             for col_index in range(self.col_count):
                 row_string += value_format_string.format(
-                    self.map(row_index, col_index)
+                    self.map(col=col_index, row=row_index)
                 )
             print("    [" + row_string + "]")
         print("]")
