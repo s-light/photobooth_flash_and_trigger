@@ -11,8 +11,8 @@ import time
 import board
 
 import adafruit_fancyled.adafruit_fancyled as fancyled
-# import animation
-import animation_minimal as animation
+import animation
+# import animation_minimal as animation
 import ir_helper
 
 

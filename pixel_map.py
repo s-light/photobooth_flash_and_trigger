@@ -71,13 +71,14 @@ class PixelMap2D(object):
 ##########################################
 # main loop
 
-def wait_with_print(duration):
+def wait_with_print(duration=1):
     """Wait with print."""
     import time
     step_duration = 0.5
     waiting_duration = 0
     while waiting_duration < duration:
-        print(". ", end='', flush=True)
+        # print(". ", end='', flush=True)
+        print(".", end='')
         time.sleep(step_duration)
         waiting_duration += step_duration
     print("")
@@ -168,7 +169,7 @@ def test_main():
 
     pmap = PixelMap2D(row_count=4, col_count=8, map_function=mymap_tlc5957)
     pmap.print_mapping()
-    # wait_with_print(1)
+    wait_with_print(10)
 
 
 if __name__ == '__main__':

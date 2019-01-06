@@ -8,11 +8,14 @@ it combines the TLC5971 library with FancyLED and 2D Array / Mapping.
 Enjoy the colors :-)
 """
 
+import time
+
 import board
 import busio
 
-import adafruit_tlc59711
+from adafruit_tlc59711.adafruit_tlc59711_multi import TLC59711Multi
 import adafruit_fancyled.adafruit_fancyled as fancyled
+from pixel_map import PixelMap2D
 
 
 ##########################################
@@ -28,28 +31,18 @@ print(42 * '*')
 print("define pixel array / init TLC5971")
 
 LEDBoard_count = 8
+# LEDBoard_count = 1
 LEDBoard_row_count = 4
 LEDBoard_col_count = 4
 pixel_col_count = LEDBoard_count * LEDBoard_col_count
 pixel_count = pixel_col_count * LEDBoard_row_count
 
 spi = busio.SPI(board.SCK, MOSI=board.MOSI)
-# Define array with TLC5971 chips
-pixels = [
-    adafruit_tlc59711.TLC59711(spi, auto_show=False)
-    for count in range(pixel_count // 4)
-]
+pixels = TLC59711Multi(spi, pixel_count=pixel_count)
 
 
 # How to map a 2D-Pixel Array to the needed TLC5971 sending order:
 
-
-LEDBoard_map = [
-    [4, 5, 12, 13],
-    [6, 7, 14, 15],
-    [0, 1, 8, 11],
-    [2, 3, 10, 12],
-]
 
 # create empty 2d list
 # this will be filled by the initialisation for all chips/pcbs
@@ -73,7 +66,7 @@ def pixel_map_fill():
                 col_index_w_board = col_index * board_index
                 # set new pixel_index
                 pixel_map[row_index][col_index_w_board] = (
-                    index_offset + LEDBoard_map[row_index][col_index])
+                    index_offset + LEDBoard_single[row_index][col_index])
                 # print debug things
                 print(
                     "| "
@@ -90,7 +83,7 @@ def pixel_map_fill():
                         row=row_index,
                         col_w_board=col_index_w_board,
                         index_offset=index_offset,
-                        board_map=LEDBoard_map[row_index][col_index],
+                        board_map=LEDBoard_single[row_index][col_index],
                         pixel_map=pixel_map[row_index][col_index_w_board],
                     )
                 )
@@ -163,6 +156,58 @@ palette = [
 
 
 ##########################################
+# mappings
+
+LEDBoard_row_count = 4
+LEDBoard_col_count = 4
+LEDBoard_pixel_count = LEDBoard_row_count * LEDBoard_col_count
+LEDBoard_single = [
+    [4, 5, 12, 13],
+    [6, 7, 14, 15],
+    [0, 1, 8, 11],
+    [2, 3, 10, 12],
+]
+
+Boards_row_count = 4
+Boards_col_count = 2
+Boards_positions = [
+    [4, 8],
+    [3, 7],
+    [2, 6],
+    [1, 5],
+]
+
+matrix_col_count = LEDBoard_col_count * Boards_col_count
+matrix_row_count = LEDBoard_row_count * Boards_row_count
+
+
+def mymap_LEDBoard_4x4_16bit(self, row, col):
+    """Map row and col to pixel_index."""
+
+    Board_count = self.pixel_count // LEDBoard_pixel_count
+
+    # physical_index = (row * self.col_count) + col
+
+    # row_inv = (self.row_count-1) - row
+    col_inv = (self.col_count - 1) - col
+
+    # split chip position from chip_inner
+    chipin_row = row % LEDBoard_row_count
+    chipin_col = col % LEDBoard_col_count
+    # chip_row_inv = row_inv // LEDBoard_row_count
+    chip_col_inv = col_inv // LEDBoard_col_count
+
+    chipin_row_inv = (LEDBoard_row_count - 1) - chipin_row
+    chipin_col_inv = (LEDBoard_col_count - 1) - chipin_col
+    chipin_pixel_index = (
+        (chipin_row_inv * LEDBoard_col_count) + chipin_col_inv
+    )
+
+    pixel_index = (chipin_pixel_index * Board_count) + chip_col_inv
+
+    return pixel_index
+
+##########################################
 # test functions
 
 def test_set_corners_to_colors():
@@ -220,8 +265,6 @@ def test_loop_2d_colors():
 
 def test_main():
     """Test Main."""
-    import time
-
     test_set_corners_to_colors()
     time.sleep(10)
     test_set_2d_colors()
@@ -229,8 +272,21 @@ def test_main():
     test_loop_2d_colors()
 
 
+def test_map():
+    """Test Map."""
+    #####################
+    # LEDBoard_4x4_16bit mapping
+
+    pmap = PixelMap2D(
+        row_count=matrix_row_count,
+        col_count=matrix_col_count,
+        map_function=mymap_LEDBoard_4x4_16bit)
+    pmap.print_mapping()
+
+
 ##########################################
 # main loop
 
 if __name__ == '__main__':
-    test_main()
+    # test_main()
+    test_map()

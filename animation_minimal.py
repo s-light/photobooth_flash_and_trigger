@@ -41,11 +41,6 @@ pixel_col_count = LEDBoard_count * LEDBoard_col_count
 pixel_count = pixel_col_count * LEDBoard_row_count
 
 spi = busio.SPI(board.SCK, MOSI=board.MOSI)
-# Define array with TLC5971 chips
-# pixels = [
-#     TLC59711(spi, auto_show=False)
-#     for count in range(pixel_count // 4)
-# ]
 pixels = TLC59711Multi(spi, pixel_count=pixel_count)
 
 
