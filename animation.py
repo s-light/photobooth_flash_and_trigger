@@ -369,6 +369,17 @@ class AnimationHelper(object):
             print("Exception parsing 'value': ", e)
         self.brightness = value
 
+    @staticmethod
+    def print_help():
+        """Print Help."""
+        print(
+            "you can set some options:\n"
+            "- a single pixel by index: 'p18:500'\n"
+            "- a single pixel by col row: 'm2,5:500'\n"
+            "- toggle animation: 'a'\n"
+            "- set brightness: 'b0.1'\n"
+        )
+
     def check_input(self):
         """Check Input."""
         input_string = input()
@@ -382,6 +393,7 @@ class AnimationHelper(object):
             self.handle_brightness(input_string)
         # prepare new input
         # print("enter new values:")
+        self.print_help()
         print(">> ", end="")
 
     def time_meassurements(self):
@@ -399,6 +411,14 @@ class AnimationHelper(object):
             _test,
             loop_count
         )
+
+    def main_loop(self):
+        """Loop."""
+        if supervisor.runtime.serial_bytes_available:
+            self.check_input()
+        if self.animation_run:
+            # self.test_loop_2d_colors()
+            self.rainbow_update()
 
     def run_test(self):
         """Test Main."""
@@ -423,19 +443,9 @@ class AnimationHelper(object):
         print(42 * '*')
         print("loop")
         if supervisor.runtime.serial_connected:
-            print(
-                "you can set some values:\n"
-                "- a single pixel by index: 'p18:500'\n"
-                "- a single pixel by col row: 'm2,5:500'\n"
-                "- toggle animation: 'a'\n"
-                "- set brightness: 'b0.1'\n"
-            )
+            self.print_help()
         while True:
-            if supervisor.runtime.serial_bytes_available:
-                self.check_input()
-            if self.animation_run:
-                # self.test_loop_2d_colors()
-                self.rainbow_update()
+            self.main_loop()
 
 
 animation_helper = AnimationHelper()

@@ -58,44 +58,41 @@ def key_handler(self, key_value, key_name):
         animation.flash()
 
 
-# Positional offset into color palette to get it to 'spin'
-# offset = 0
-
-# def main_animation():
-#     """Animation example."""
-#     global offset
-#     for i in range(animation.pixel_count):
-#         # Load each pixel's color from the palette using an offset, run it
-#         # through the gamma function, pack RGB value and assign to pixel.
-#         color = fancyled.palette_lookup(
-#             animation.palette, offset + i / animation.pixel_count)
-#         color = fancyled.gamma_adjust(color, brightness=0.1)
-#         animation.pixels[i] = color
-#     animation.pixels_show()
-#
-#     offset += 0.01  # Bigger number = faster spin
-
-
 ##########################################
 # main
+
+
+myIRHelper = ir_helper.IRHelper(board.D7, key_handler)
+
+
+def main_setup():
+    """Setup."""
+    print(42 * '*')
+    # time.sleep(0.5)
+    # animation.pmap.print_mapping()
+
+    animation.pixels.set_pixel_all_16bit_value(1, 1, 1)
+    # animation.pixels.set_pixel_all_16bit_value(100, 100, 100)
+    # animation.pixels.show()
+    # animation.wait_with_print(1)
+    animation.pixels_init_BCData()
+    animation.pixels.show()
+    # animation.wait_with_print(1)
+
+
+def main_loop():
+    """Loop."""
+    myIRHelper.check()
+    animation.animation_helper.main_loop()
+    myIRHelper.check()
+    # time.sleep(0.1)
+
+
 if __name__ == '__main__':
+    # print(42 * '*')
+    print("setup")
+    main_setup()
     print(42 * '*')
-    time.sleep(0.5)
-
-    # print("\n")
-    # animation.pixel_map_print_information()
-    print("\n")
-    # animation.pixel_map_fill()
-    print("\n")
-    # animation.pixel_map_print_information()
-    # print("\n")
-
-    myIRHelper = ir_helper.IRHelper(board.D7, key_handler)
-    print(42 * '*')
-    print("rainbow loop")
+    print("loop")
     while True:
-        # animation.rainbow_update()
-        myIRHelper.check()
-        animation.channelcheck_update()
-        myIRHelper.check()
-        time.sleep(0.1)
+        main_loop()
