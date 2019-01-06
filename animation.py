@@ -174,6 +174,7 @@ class AnimationHelper(object):
         super(AnimationHelper, self).__init__()
         self.offset = 0
         self.animation_run = True
+        self.brightness = 0.1
 
     ##########################################
     # test functions
@@ -287,7 +288,7 @@ class AnimationHelper(object):
             )
             color_r, color_g, color_b = fancyled.gamma_adjust(
                 color,
-                brightness=0.2)
+                brightness=self.brightness)
 
             for col_index in range(Matrix_col_count):
                 # pixels[pmap.map(col=col_index, row=row_index)] = color
@@ -359,18 +360,29 @@ class AnimationHelper(object):
         pixels.set_pixel_16bit_value(pixel_index, value, value, value)
         pixels.show()
 
+    def handle_brightness(self, input_string):
+        """Handle brightness set."""
+        value = 0
+        try:
+            value = float(input_string[1:])
+        except ValueError as e:
+            print("Exception parsing 'value': ", e)
+        self.brightness = value
+
     def check_input(self):
         """Check Input."""
-        new_value = input()
-        if "p" in new_value:
-            self.handle_pixel_set(new_value)
-        if "m" in new_value:
-            self.handle_pixel_map_set(new_value)
-        if "a" in new_value:
+        input_string = input()
+        if "p" in input_string:
+            self.handle_pixel_set(input_string)
+        if "m" in input_string:
+            self.handle_pixel_map_set(input_string)
+        if "a" in input_string:
             self.animation_run = not self.animation_run
+        if "b" in input_string:
+            self.handle_brightness(input_string)
         # prepare new input
         # print("enter new values:")
-        print(">>", end="")
+        print(">> ", end="")
 
     def time_meassurements(self):
         """Test Main."""
@@ -412,8 +424,11 @@ class AnimationHelper(object):
         print("loop")
         if supervisor.runtime.serial_connected:
             print(
-                "you can set a single pixel manually:\n"
-                "example: 'p18:500' or 'm2,5:500'"
+                "you can set some values:\n"
+                "- a single pixel by index: 'p18:500'\n"
+                "- a single pixel by col row: 'm2,5:500'\n"
+                "- toggle animation: 'a'\n"
+                "- set brightness: 'b0.1'\n"
             )
         while True:
             if supervisor.runtime.serial_bytes_available:
