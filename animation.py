@@ -89,6 +89,22 @@ spi = busio.SPI(board.SCK, MOSI=board.MOSI)
 pixels = TLC59711Multi(spi, pixel_count=Matrix_pixel_count)
 
 
+def pixels_init_BCData():
+    """Initialise global brightness control data."""
+    BCValues = TLC59711Multi.calculate_BCData(
+        Ioclmax=18,
+        IoutR=18,
+        IoutG=11,
+        IoutB=13,
+    )
+    print("BCValues = {}".format(BCValues))
+    pixels.bcr = BCValues[0]
+    pixels.bcg = BCValues[1]
+    pixels.bcb = BCValues[2]
+    pixels.update_BCData()
+    pixels.show()
+
+
 ##########################################
 # Declare a 6-element RGB rainbow palette
 palette = [
@@ -128,6 +144,24 @@ def wait_with_print(duration=1):
         time.sleep(step_duration)
         waiting_duration += step_duration
     print("")
+
+
+def time_measurement_call(message, test_function, loop_count=1000):
+    """Measure timing."""
+    duration = 0
+    start_time = time.monotonic()
+    for _index in range(loop_count):
+        start_time = time.monotonic()
+        test_function()
+        end_time = time.monotonic()
+        duration += end_time - start_time
+    print(
+        "{call_duration:>8.2f}ms\t{message}"
+        "".format(
+            call_duration=(duration / loop_count) * 1000,
+            message=message,
+        )
+    )
 
 
 ##########################################
@@ -224,18 +258,19 @@ class AnimationHelper(object):
             # through the gamma function, pack RGB value and assign to pixel.
             color = fancyled.palette_lookup(
                 palette,
-                self.offset + row_index / pixels.pixel_count)
-            color = fancyled.gamma_adjust(color, brightness=0.25)
-            # print("{index:>2} : {div:>2} | {mod:>2}".format(
-            #     index=i,
-            #     div=i // 4,
-            #     mod=i % 4
-            # ))
+                self.offset + row_index / Matrix_row_count)
+            color = fancyled.gamma_adjust(color, brightness=0.1)
             for col_index in range(Matrix_col_count):
-                pixels[pmap.map(col=col_index, row=row_index)] = color
+                # pixels[pmap.map(col=col_index, row=row_index)] = color
+                pixels.set_pixel_float_value(
+                    pmap.map(col=col_index, row=row_index),
+                    color[0],
+                    color[1],
+                    color[2],
+                )
         pixels.show()
 
-        self.offset += 0.001  # Bigger number = faster spin
+        self.offset += 0.01  # Bigger number = faster spin
         if self.offset >= 10:
             self.offset -= 10
 
@@ -303,16 +338,40 @@ class AnimationHelper(object):
         # print("enter new values:")
         print(">>", end="")
 
+    def time_meassurements(self):
+        """Test Main."""
+
+    def time_measurement_rainbow(self):
+        """Measure timing."""
+        print("*** time measurement - rainbow:")
+        loop_count = 20
+
+        def _test():
+            self.rainbow_update()
+        time_measurement_call(
+            "'self.rainbow_update()'",
+            _test,
+            loop_count
+        )
+
     def run_test(self):
         """Test Main."""
-        pmap.print_mapping()
+        # pmap.print_mapping()
 
         pixels.set_pixel_all_16bit_value(1, 1, 1)
+        # pixels.set_pixel_all_16bit_value(100, 100, 100)
+        # pixels.show()
+        # wait_with_print(1)
+        pixels_init_BCData()
         pixels.show()
+        # wait_with_print(1)
 
-        self.test_set_corners_to_colors()
-        wait_with_print(1)
-        self.test_set_2d_colors()
+        # self.test_set_corners_to_colors()
+        # wait_with_print(1)
+        # self.test_set_2d_colors()
+        # wait_with_print(1)
+
+        self.time_measurement_rainbow()
         wait_with_print(1)
 
         print(42 * '*')

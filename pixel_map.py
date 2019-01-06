@@ -27,6 +27,15 @@ class PixelMap2D(object):
         if map_function:
             self.map_function = map_function
         self.pixel_buffer = pixel_buffer
+        # prepare static map
+        self._map = [[0 for i in range(col_count)] for j in range(row_count)]
+        self.init_map()
+
+    def init_map(self):
+        """Prepare Static Map."""
+        self._map[][]
+        pixel_index = self.map_function(self, col=col, row=row)
+
 
     def map(self, *, col=0, row=0):
         """Map row and col to pixel_index."""
