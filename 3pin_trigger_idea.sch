@@ -1,0 +1,404 @@
+EESchema Schematic File Version 4
+LIBS:3pin_trigger_idea-cache
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date "2019-06-04"
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Device:LED D2
+U 1 1 5CF6E192
+P 6300 3100
+F 0 "D2" H 6291 3316 50  0000 C CNN
+F 1 "amber" H 6291 3225 50  0000 C CNN
+F 2 "" H 6300 3100 50  0001 C CNN
+F 3 "~" H 6300 3100 50  0001 C CNN
+	1    6300 3100
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:LED D1
+U 1 1 5CF6E1D7
+P 6300 2700
+F 0 "D1" H 6291 2916 50  0000 C CNN
+F 1 "blue" H 6291 2825 50  0000 C CNN
+F 2 "" H 6300 2700 50  0001 C CNN
+F 3 "~" H 6300 2700 50  0001 C CNN
+	1    6300 2700
+	-1   0    0    1   
+$EndComp
+$Comp
+L Switch:SW_Push SW1
+U 1 1 5CF6E3DB
+P 6650 2300
+F 0 "SW1" H 6650 2585 50  0000 C CNN
+F 1 "SW_Push" H 6650 2494 50  0000 C CNN
+F 2 "" H 6650 2500 50  0001 C CNN
+F 3 "" H 6650 2500 50  0001 C CNN
+	1    6650 2300
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x03_Female J4
+U 1 1 5CF6E50F
+P 5400 2800
+F 0 "J4" H 5300 3050 50  0000 L CNN
+F 1 "device" H 5200 2600 50  0000 L CNN
+F 2 "" H 5400 2800 50  0001 C CNN
+F 3 "~" H 5400 2800 50  0001 C CNN
+	1    5400 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x03_Male J5
+U 1 1 5CF6E63E
+P 5550 2800
+F 0 "J5" H 5650 3050 50  0000 C CNN
+F 1 "remote" H 5650 2600 50  0000 C CNN
+F 2 "" H 5550 2800 50  0001 C CNN
+F 3 "~" H 5550 2800 50  0001 C CNN
+	1    5550 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R9
+U 1 1 5CF6E94E
+P 6300 2300
+F 0 "R9" V 6093 2300 50  0000 C CNN
+F 1 "120R" V 6184 2300 50  0000 C CNN
+F 2 "" V 6230 2300 50  0001 C CNN
+F 3 "~" H 6300 2300 50  0001 C CNN
+	1    6300 2300
+	0    1    -1   0   
+$EndComp
+$Comp
+L Transistor_BJT:BC547 Q1
+U 1 1 5CF6EA44
+P 3150 2500
+F 0 "Q1" H 3341 2546 50  0000 L CNN
+F 1 "BC547C" H 3341 2455 50  0000 L CNN
+F 2 "" H 3350 2600 50  0001 C CNN
+F 3 "~" H 3150 2500 50  0001 C CNN
+	1    3150 2500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR04
+U 1 1 5CF774CF
+P 5050 2700
+F 0 "#PWR04" H 5050 2550 50  0001 C CNN
+F 1 "+5V" H 5065 2873 50  0000 C CNN
+F 2 "" H 5050 2700 50  0001 C CNN
+F 3 "" H 5050 2700 50  0001 C CNN
+	1    5050 2700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6150 2300 6150 2700
+Connection ~ 6150 2700
+Wire Wire Line
+	5750 2700 6150 2700
+Wire Wire Line
+	6150 2700 6150 3100
+Wire Wire Line
+	6850 2300 6850 2700
+Wire Wire Line
+	6850 2700 6450 2700
+Wire Wire Line
+	5750 2800 5950 2800
+Wire Wire Line
+	5950 2800 5950 3400
+Wire Wire Line
+	5750 2900 5850 2900
+Wire Wire Line
+	5850 3500 6850 3500
+Wire Wire Line
+	6850 3500 6850 2700
+Wire Wire Line
+	5850 2900 5850 3500
+Connection ~ 6850 2700
+Wire Wire Line
+	6750 3400 6750 3100
+Wire Wire Line
+	6750 3100 6450 3100
+Wire Wire Line
+	5950 3400 6750 3400
+$Comp
+L Connector_Generic:Conn_01x01 J3
+U 1 1 5CF7960E
+P 5300 3500
+F 0 "J3" H 5379 3542 50  0000 L CNN
+F 1 "button" H 5379 3451 50  0000 L CNN
+F 2 "" H 5300 3500 50  0001 C CNN
+F 3 "~" H 5300 3500 50  0001 C CNN
+	1    5300 3500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J1
+U 1 1 5CF7968A
+P 1850 3500
+F 0 "J1" H 1770 3275 50  0000 C CNN
+F 1 "ctl_led_blue" H 1770 3366 50  0000 C CNN
+F 2 "" H 1850 3500 50  0001 C CNN
+F 3 "~" H 1850 3500 50  0001 C CNN
+	1    1850 3500
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5050 2700 5200 2700
+Wire Wire Line
+	3400 2300 3250 2300
+$Comp
+L Device:R R1
+U 1 1 5CF79DEB
+P 2800 2500
+F 0 "R1" V 2593 2500 50  0000 C CNN
+F 1 "1k5" V 2684 2500 50  0000 C CNN
+F 2 "" V 2730 2500 50  0001 C CNN
+F 3 "~" H 2800 2500 50  0001 C CNN
+	1    2800 2500
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 5CF79E45
+P 2800 2700
+F 0 "R2" V 2593 2700 50  0000 C CNN
+F 1 "100k" V 2684 2700 50  0000 C CNN
+F 2 "" V 2730 2700 50  0001 C CNN
+F 3 "~" H 2800 2700 50  0001 C CNN
+	1    2800 2700
+	0    1    -1   0   
+$EndComp
+Wire Wire Line
+	2650 2500 2650 2700
+Wire Wire Line
+	2950 2700 3250 2700
+$Comp
+L power:GND #PWR01
+U 1 1 5CF7A2FD
+P 3250 2700
+F 0 "#PWR01" H 3250 2450 50  0001 C CNN
+F 1 "GND" H 3255 2527 50  0000 C CNN
+F 2 "" H 3250 2700 50  0001 C CNN
+F 3 "" H 3250 2700 50  0001 C CNN
+	1    3250 2700
+	1    0    0    -1  
+$EndComp
+Connection ~ 3250 2700
+$Comp
+L Connector_Generic:Conn_01x01 J2
+U 1 1 5CF7A334
+P 1900 2500
+F 0 "J2" H 1820 2275 50  0000 C CNN
+F 1 "ctl_led_amber" H 1820 2366 50  0000 C CNN
+F 2 "" H 1900 2500 50  0001 C CNN
+F 3 "~" H 1900 2500 50  0001 C CNN
+	1    1900 2500
+	-1   0    0    1   
+$EndComp
+Text Label 3950 2800 0    50   ~ 0
+p2_led_amber
+$Comp
+L Transistor_BJT:BC547 Q2
+U 1 1 5CF7B268
+P 3150 3500
+F 0 "Q2" H 3341 3546 50  0000 L CNN
+F 1 "BC547C" H 3341 3455 50  0000 L CNN
+F 2 "" H 3350 3600 50  0001 C CNN
+F 3 "~" H 3150 3500 50  0001 C CNN
+	1    3150 3500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3400 3300 3250 3300
+$Comp
+L Device:R R3
+U 1 1 5CF7B26F
+P 2800 3500
+F 0 "R3" V 2593 3500 50  0000 C CNN
+F 1 "1k5" V 2684 3500 50  0000 C CNN
+F 2 "" V 2730 3500 50  0001 C CNN
+F 3 "~" H 2800 3500 50  0001 C CNN
+	1    2800 3500
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R4
+U 1 1 5CF7B275
+P 2800 3700
+F 0 "R4" V 2593 3700 50  0000 C CNN
+F 1 "100k" V 2684 3700 50  0000 C CNN
+F 2 "" V 2730 3700 50  0001 C CNN
+F 3 "~" H 2800 3700 50  0001 C CNN
+	1    2800 3700
+	0    1    -1   0   
+$EndComp
+Wire Wire Line
+	2650 3500 2650 3700
+Wire Wire Line
+	2950 3700 3250 3700
+$Comp
+L power:GND #PWR02
+U 1 1 5CF7B27D
+P 3250 3700
+F 0 "#PWR02" H 3250 3450 50  0001 C CNN
+F 1 "GND" H 3255 3527 50  0000 C CNN
+F 2 "" H 3250 3700 50  0001 C CNN
+F 3 "" H 3250 3700 50  0001 C CNN
+	1    3250 3700
+	1    0    0    -1  
+$EndComp
+Connection ~ 3250 3700
+Wire Wire Line
+	2050 3500 2650 3500
+Connection ~ 2650 3500
+Text Label 3950 2900 0    50   ~ 0
+p3_led_blue
+$Comp
+L Device:R R5
+U 1 1 5CF7CE54
+P 3550 2300
+F 0 "R5" V 3343 2300 50  0000 C CNN
+F 1 "220R" V 3434 2300 50  0000 C CNN
+F 2 "" V 3480 2300 50  0001 C CNN
+F 3 "~" H 3550 2300 50  0001 C CNN
+	1    3550 2300
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R6
+U 1 1 5CF7D049
+P 3550 3300
+F 0 "R6" V 3343 3300 50  0000 C CNN
+F 1 "220R" V 3434 3300 50  0000 C CNN
+F 2 "" V 3480 3300 50  0001 C CNN
+F 3 "~" H 3550 3300 50  0001 C CNN
+	1    3550 3300
+	0    1    1    0   
+$EndComp
+$Comp
+L Transistor_BJT:BC547 Q3
+U 1 1 5CF7FDD1
+P 4500 3700
+F 0 "Q3" H 4691 3746 50  0000 L CNN
+F 1 "BC547C" H 4691 3655 50  0000 L CNN
+F 2 "" H 4700 3800 50  0001 C CNN
+F 3 "~" H 4500 3700 50  0001 C CNN
+	1    4500 3700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5100 3500 4600 3500
+$Comp
+L Device:R R7
+U 1 1 5CF7FDD8
+P 4150 3700
+F 0 "R7" V 3943 3700 50  0000 C CNN
+F 1 "5k6" V 4034 3700 50  0000 C CNN
+F 2 "" V 4080 3700 50  0001 C CNN
+F 3 "~" H 4150 3700 50  0001 C CNN
+	1    4150 3700
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R8
+U 1 1 5CF7FDDE
+P 3950 3850
+F 0 "R8" V 3743 3850 50  0000 C CNN
+F 1 "4k7" V 3834 3850 50  0000 C CNN
+F 2 "" V 3880 3850 50  0001 C CNN
+F 3 "~" H 3950 3850 50  0001 C CNN
+	1    3950 3850
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR03
+U 1 1 5CF7FDE6
+P 4600 4000
+F 0 "#PWR03" H 4600 3750 50  0001 C CNN
+F 1 "GND" H 4605 3827 50  0000 C CNN
+F 2 "" H 4600 4000 50  0001 C CNN
+F 3 "" H 4600 4000 50  0001 C CNN
+	1    4600 4000
+	1    0    0    -1  
+$EndComp
+Text Label 2050 3500 0    50   ~ 0
+ctl_led_blue
+Text Label 2100 2500 0    50   ~ 0
+ctl_led_amber
+Text Label 5100 3500 2    50   ~ 0
+sig_button
+Connection ~ 2650 2500
+Wire Wire Line
+	2100 2500 2650 2500
+Wire Wire Line
+	3950 2800 5200 2800
+Wire Wire Line
+	3950 2900 5200 2900
+Wire Wire Line
+	3700 2300 3950 2300
+Wire Wire Line
+	3700 3300 3950 3300
+Wire Wire Line
+	3950 2300 3950 2800
+Wire Wire Line
+	3950 3300 3950 2900
+$Comp
+L Device:R R?
+U 1 1 5CFA2764
+P 3950 3550
+F 0 "R?" V 3743 3550 50  0000 C CNN
+F 1 "22k" V 3834 3550 50  0000 C CNN
+F 2 "" V 3880 3550 50  0001 C CNN
+F 3 "~" H 3950 3550 50  0001 C CNN
+	1    3950 3550
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	4600 3900 4600 4000
+Connection ~ 4600 4000
+Wire Wire Line
+	3950 3700 4000 3700
+Connection ~ 3950 3700
+Wire Wire Line
+	3950 4000 4600 4000
+Wire Wire Line
+	3950 3300 3950 3400
+Connection ~ 3950 3300
+Text Notes 5150 3950 0    50   ~ 0
+Q3 Base:\nif SW==open && led_blue==off\n→ 
+$Comp
+L Device:R R?
+U 1 1 5CFAE419
+P 4600 3350
+F 0 "R?" V 4393 3350 50  0000 C CNN
+F 1 "200k" V 4484 3350 50  0000 C CNN
+F 2 "" V 4530 3350 50  0001 C CNN
+F 3 "~" H 4600 3350 50  0001 C CNN
+	1    4600 3350
+	1    0    0    -1  
+$EndComp
+Connection ~ 4600 3500
+$Comp
+L power:+5V #PWR?
+U 1 1 5CFAE485
+P 4600 3200
+F 0 "#PWR?" H 4600 3050 50  0001 C CNN
+F 1 "+5V" H 4615 3373 50  0000 C CNN
+F 2 "" H 4600 3200 50  0001 C CNN
+F 3 "" H 4600 3200 50  0001 C CNN
+	1    4600 3200
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
