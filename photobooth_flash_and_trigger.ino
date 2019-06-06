@@ -53,6 +53,8 @@
 // use <file.h> for files in library directory
 // #include <file.h>
 
+#include "Keyboard.h"
+
 #include <slight_DebugMenu.h>
 
 #include <slight_ButtonInput.h>
@@ -128,7 +130,7 @@ uint32_t debugOut_LastAction = 0;
 const uint16_t debugOut_interval = 1000; //ms
 
 boolean debugOut_Serial_Enabled = 1;
-boolean debugOut_LED_Enabled = 1;
+boolean debugOut_LED_Enabled = 0;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Menu
@@ -139,14 +141,18 @@ slight_DebugMenu myDebugMenu(Serial, Serial, 20);
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // button
 
+const uint8_t remote_trigger_pin = A0;
+const uint16_t remote_trigger_treshold = 700;
+
 // slight_ButtonInput mybutton;
 slight_ButtonInput mybutton_remote_trigger = slight_ButtonInput(
     // byte cbID_New
     1,
     // byte cbPin_New,
-    8,
+    remote_trigger_pin,
     // tCbfuncGetInput cbfuncGetInput_New,
-    button_getinput,
+    // button_getinput,
+    button_getinput_remote,
     // tcbfOnEvent cbfCallbackOnEvent_New,
     button_event,
     // const uint16_t cwDuration_Debounce_New = 30,
@@ -164,7 +170,7 @@ slight_ButtonInput mybutton2 = slight_ButtonInput(
     // byte cbID_New
     2,
     // byte cbPin_New,
-    4,
+    A0,
     // tCbfuncGetInput cbfuncGetInput_New,
     button_getinput,
     // tcbfOnEvent cbfCallbackOnEvent_New,
@@ -184,7 +190,7 @@ slight_ButtonInput mybutton2 = slight_ButtonInput(
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // others
 
-
+boolean send_keystroke = true;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // functions
@@ -197,6 +203,12 @@ void debugOut_update() {
     uint32_t duration_temp = millis() - debugOut_LastAction;
     if (duration_temp > debugOut_interval) {
         debugOut_LastAction = millis();
+
+        // const uint16_t raw = analogRead(mybutton_remote_trigger.pin);
+        const uint16_t raw = analogRead(remote_trigger_pin);
+        Serial.print(F("raw: "));
+        Serial.print(raw);
+        Serial.println();
 
         if ( debugOut_Serial_Enabled ) {
             Serial.print(millis());
@@ -234,8 +246,14 @@ void menu__print_help(Print &out) {
     out.println(F("\t 'x': tests"));
     out.println();
     out.print(F("\t 'r': toggle readyled 'r' ("));
-    // out.print(animation.animation_run);
-    // out.println(F(")"));
+    out.print(digitalRead(readyled_pin));
+    out.println(F(")"));
+    out.print(F("\t 'i': toggle infoled 'i' ("));
+    out.print(digitalRead(infoled_pin));
+    out.println(F(")"));
+    out.print(F("\t 'k': toggle send_keystroke 'k' ("));
+    out.print(send_keystroke);
+    out.println(F(")"));
     // out.println();
     out.println(F("____________________________________________________________"));
 }
@@ -277,13 +295,17 @@ void handleMenu_Main(slight_DebugMenu *pInstance) {
             out.println(F("__________"));
         } break;
         // ---------------------
-        // case 'r': {
-        //     out.println(F("toggle animation_run"));
-        //     animation.animation_run = !animation.animation_run;
-        // } break;
         case 'r': {
             out.println(F("toggle readyled"));
             digitalWrite(readyled_pin, !digitalRead(readyled_pin));
+        } break;
+        case 'i': {
+            out.println(F("toggle infoled"));
+            digitalWrite(infoled_pin, !digitalRead(infoled_pin));
+        } break;
+        case 'k': {
+            out.println(F("toggle send_keystroke"));
+            send_keystroke = !send_keystroke;
         } break;
         //---------------------------------------------------------------------
         default: {
@@ -323,6 +345,21 @@ void button_init(Stream &out) {
     out.println(F("  finished."));
 }
 
+bool button_getinput_remote(byte id, byte pin) {
+    // read input invert reading - button closes to GND.
+    const uint8_t backup = digitalRead(readyled_pin);
+    digitalWrite(readyled_pin, LOW);
+    // const boolean state = !digitalRead(pin);
+    const uint16_t raw = analogRead(pin);
+    boolean state = false;
+    if (raw > remote_trigger_treshold) {
+        state = true;
+    }
+    digitalWrite(readyled_pin, backup);
+    return state;
+    // return (PINE & B00000100) != 0;
+}
+
 bool button_getinput(byte id, byte pin) {
     // read input invert reading - button closes to GND.
     return !digitalRead(pin);
@@ -331,9 +368,9 @@ bool button_getinput(byte id, byte pin) {
 
 void button_event(slight_ButtonInput *instance, byte event) {
     Stream &out = Serial;
-    out.print(F("Instance ID:"));
-    out.print((*instance).getID());
-    out.print(F(" "));
+    // out.print(F("Instance ID:"));
+    // out.print((*instance).getID());
+    // out.print(F(" "));
     // out.println();
     // out.print(F("Event: "));
     // (*instance).printEvent(out, event);
@@ -358,10 +395,16 @@ void button_event(slight_ButtonInput *instance, byte event) {
         //     out.print(F("up"));
         // } break;
         case slight_ButtonInput::event_click : {
-            out.println(F("click"));
+            // out.println(F("click"));
+            if ((*instance).getID() == mybutton_remote_trigger.getID()) {
+                out.println(F("~~~42~~~ trigger!"));
+                if (send_keystroke) {
+                    Keyboard.write('s');
+                }
+            }
         } break;
         case slight_ButtonInput::event_click_long : {
-            out.println(F("click long"));
+            // out.println(F("click long"));
         } break;
         // case slight_ButtonInput::event_click_double : {
         //     // out.println(F("click double"));
@@ -370,8 +413,8 @@ void button_event(slight_ButtonInput *instance, byte event) {
         //     out.println(F("click triple"));
         // } break;
         case slight_ButtonInput::event_click_multi : {
-            out.print(F("click count: "));
-            out.println((*instance).getClickCount());
+            // out.print(F("click count: "));
+            // out.println((*instance).getClickCount());
         } break;
     }  // end switch
 }
@@ -389,9 +432,9 @@ void setup() {
 
         //LiveSign
         pinMode(infoled_pin, OUTPUT);
-        digitalWrite(infoled_pin, HIGH);
+        digitalWrite(infoled_pin, LOW);
         pinMode(readyled_pin, OUTPUT);
-        digitalWrite(readyled_pin, HIGH);
+        digitalWrite(readyled_pin, LOW);
 
         // as of arduino 1.0.1 you can use INPUT_PULLUP
 
@@ -421,6 +464,7 @@ void setup() {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // setup sub-Parts
 
+        Keyboard.begin();
         button_init(Serial);
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
