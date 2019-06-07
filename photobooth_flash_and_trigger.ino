@@ -123,8 +123,8 @@ void sketchinfo_print(Print &out) {
 // Debug Output
 
 boolean infoled_state = 0;
-const byte infoled_pin = 9;
-const byte readyled_pin = 7;
+const byte infoled_pin = A2;
+const byte readyled_pin = A1;
 
 uint32_t debugOut_LastAction = 0;
 const uint16_t debugOut_interval = 1000; //ms
@@ -400,6 +400,38 @@ void button_event(slight_ButtonInput *instance, byte event) {
                 out.println(F("~~~42~~~ trigger!"));
                 if (send_keystroke) {
                     Keyboard.write('s');
+                    delay(250);
+                    digitalWrite(readyled_pin, HIGH);
+                    delay(250);
+                    digitalWrite(readyled_pin, LOW);
+                    delay(250);
+                    digitalWrite(readyled_pin, HIGH);
+                    delay(250);
+                    digitalWrite(readyled_pin, LOW);
+                    delay(250);
+                    digitalWrite(readyled_pin, HIGH);
+                    delay(250);
+                    digitalWrite(readyled_pin, LOW);
+                    delay(250);
+                    digitalWrite(readyled_pin, HIGH);
+                    delay(250);
+                    digitalWrite(readyled_pin, LOW);
+                    delay(250);
+                    digitalWrite(readyled_pin, HIGH);
+                    delay(250);
+                    digitalWrite(readyled_pin, LOW);
+                    delay(250);
+                    digitalWrite(readyled_pin, HIGH);
+                    delay(250);
+                    digitalWrite(readyled_pin, LOW);
+                    delay(250);
+                    digitalWrite(readyled_pin, HIGH);
+                    delay(250);
+                    digitalWrite(readyled_pin, LOW);
+                    delay(250);
+                    digitalWrite(readyled_pin, HIGH);
+                    delay(250);
+                    digitalWrite(readyled_pin, LOW);
                 }
             }
         } break;
